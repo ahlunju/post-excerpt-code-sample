@@ -4,4 +4,4 @@ Due to contract agreement I cannot share the source code in public, I uploaded s
 
 Post Excerpt Angular project demo URL:
 
-http://yalunzhu.com/postexcerpt/#/section/word%20match/session/4/wall/
+http://yalunzhu.com/postexcerpt/
