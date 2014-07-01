@@ -1,0 +1,28 @@
+<div class="swiper-wrapper-annotable" annotable></div>
+<a class="backward" ng-hide="hidePrevArrow" ng-click="previousSlide()">
+  <i>
+    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="44.945px" height="45px" viewBox="0 0 44.945 45" style="enable-background:new 0 0 44.945 45;" xml:space="preserve">
+  </i>
+</a>
+<a class="forward" ng-hide="hideNextArrow" ng-click="nextSlide()"><i></i></a>
+<div class="swiper-wrapper">
+  <div class="swiper-slide" ng-class="{spotlight:excerpt.spotlight}" ng-repeat="excerpt in excerpts">
+    <div class="slide-wrapper" >
+      <cite ng-if="excerpt.author != 'anonymous'">{{excerpt.author}}</cite>
+      <cite class="student-name-anonymous" ng-if="excerpt.author == 'anonymous'">{{excerpt.author}}</cite>
+      <article>{{excerpt.content}}</article>
+      <div class="saved-excerpt-tag-wrapper tag-select">
+        <span class="saved-excerpt-tag" ng-repeat="skill in excerpt.skills" ng-if="excerpt.skills[$index].checked == true">{{excerpt.skills[$index].value}}</span>
+      </div>
+    </div>
+    <i class="excerpt-mode-icon"  ng-click="toggleSpotlight(excerpt)" ng-class="{spotlight:excerpt.spotlight}" >
+      <span class="spotlight-wrapper">
+        <!--spotlight icon-->
+      </span>
+      <span class="spotlight-wrapper-on">
+        <!--spotlight on icon-->
+      </span>
+    </i>
+  </div>
+</div>

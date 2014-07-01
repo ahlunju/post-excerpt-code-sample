@@ -1,0 +1,245 @@
+<div class="hidden-modal"></div>
+<div class="student-excerpt">
+  <section class="saved-excerpt-container">
+    <div class="saved-excerpts column-1">
+      <button class="add-new-box" ng-hide="leftColumn.showGhost" ng-click="leftColumn.showGhostBox()" ng-disabled="!editingAllowed">add to left column</button>
+      <section class="new-excerpt" ng-class="{'editing-disallowed': !editingAllowed, 'edit-mode': leftColumn.boxAttr}">
+        <section class="editbox" ng-show="leftColumn.showGhost">
+          <textarea toggle-draggable="true" ng-model="leftColumn.newExcerpt.content"  ng-focus="leftColumn.showAttr('left'); disableFixed();" placeholder="Write or paste excerpt here.." ng-disabled="!leftColumn.boxAttr && !editingAllowed"></textarea>
+          <section class="student-attr" ng-show="leftColumn.boxAttr">
+            <button class="ctrl-btn select-student" ng-click="toggleStudentName()" ng-hide="showRoster">select student...</button>
+            <div class="student-name" >
+              <input  ng-model="leftColumn.newExcerpt.author" class="student-name-input"  ng-class="{selected:
+                attributedStudentId}" ng-show="showRoster" placeholder="Add/select student" disabled="disabled" />
+              <div class="triangle" ng-show="showRoster"></div>
+              <div class="triangle inner-triangle" ng-show="showRoster"></div>
+            </div>
+            <section class="student-roster-container" ng-show="showRoster">
+              <button class="anonymous-author-btn" ng-click="selectedStudent('anonymous')">
+                <!--anonymous icon-->Make Anonymous
+              </button>
+              <header class="student-roster-header">
+                <span>days since last featured</span>
+              </header>
+              <ul class="student-roster">
+                <li ng-repeat="student in currentRoster" ng-class="{active:student.key === attributedStudentId}" ng-click="selectedStudent(student)">
+                  <span class="student-full-name">{{student.firstName}} {{student.lastName}}</span>
+                  <span class="day-since" ng-if="student.lastExcerptDate.length != 0">{{student.lastExcerptDate}}</span>
+                  <span class="day-since"   ng-if="!student.pastExcerpt">-</span>
+                </li>
+              </ul>
+            </section>
+            <div class="tag-editor">
+              <p class="tag-editor-title">Tags skills</p>
+              <ul class="tag-select" ng-model="leftColumn.newExcerpt.skills">
+                <li ng-repeat="item in leftColumn.newExcerpt.skills">
+                  <span class="tag-label" ng-click="toggleTag(item)" ng-class="{'active': item.checked}">
+                    {{item.value}}
+                    <i ng-class="{'delete-tag' : !item.predefined}" ng-if="item.predefined == false" ng-click="deleteTag(leftColumn.newExcerpt.skills, $index)">
+                      <!--delete icon-->
+                    </i>
+                  </span>
+                </li>
+              </ul>
+              <input type="text" ng-model="leftColumn.newTag.value" placeholder="Add new skill..." ng-focus="disableFixed()"/>
+              <button class="ctrl-btn add-tag" ng-click="leftColumn.addTag(leftColumn.newExcerpt)" ng-disabled="!leftColumn.newTag.value">Add</button>
+            </div>
+            <button class="ctrl-btn cancel-excerpt" ng-click="leftColumn.discardNewExcerpt(leftColumn.newExcerpt);" toggle-draggable="false">Cancel</button>
+            <button class="ctrl-btn save-excerpt" ng-click="leftColumn.saveExcerpt(leftColumn.newExcerpt);" ng-disabled="!(leftColumn.newExcerpt.author&& leftColumn.newExcerpt.content)" toggle-draggable="false">Post Excerpt</button>
+          </section>
+        </section>
+      </section>
+      <ul class="saved-excerpts-list" html-sortable="sortable_cross_option" ng-model="leftColumn.excerpts" ng-extra-sortable="leftColumn.side" flag="onDrag">
+        <li class="droppable ng-scope empty-list-holder" ng-if="onDrag && leftColumn.excerpts.length  == 0 && rightColumn.excerpts.length != 1">Drag and Drop Here</li>
+        <!-- Needed for empty list -->
+        <li class="excerpt" ng-repeat="excerpt in leftColumn.excerpts" draggable="{{!editingAllowed}}" ng-class="{'edit-mode':excerpt.editMode, 'editing-disallowed': !editingAllowed}">
+          <section class="excerpt-edit-mode">
+            <div class='excerpt-mode-icon-container'>
+              <i class="remove-button" ng-click="leftColumn.delete(excerpt)" toggle-draggable="false">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                  width="19.031px" height="23.98px" viewBox="0 0 19.031 23.98" style="enable-background:new 0 0 19.031 23.98;"
+                  xml:space="preserve">
+                <!--delete icon-->
+              </i>
+            </div>
+            <textarea ng-model="excerpt.content" ng-focus="disableFixed()"></textarea>
+            <button class="ctrl-btn select-student" ng-click="toggleStudentName()" ng-hide="showRoster">select student...</button>
+            <div class="student-name" >
+              <input ng-class="{selected:
+                attributedStudentId}" class="student-name-input"  ng-model="excerpt.author" ng-show="showRoster" placeholder="Add/select student" disabled="disabled" />
+              <div class="triangle" ng-show="showRoster"></div>
+              <div class="triangle inner-triangle" ng-show="showRoster"></div>
+            </div>
+            <section class="student-roster-container" ng-show="showRoster">
+              <button class="anonymous-author-btn" ng-click="selectedStudent('anonymous')">
+                <!--anonymous icon-->Make Anonymous
+              </button>
+              <header class="student-roster-header">
+                <span>days since last featured</span>
+              </header>
+              <ul class="student-roster">
+                <li ng-repeat="student in currentRoster" ng-class="{active:student.key === attributedStudentId}" ng-click="selectedStudent(student)">
+                  <span class="student-full-name">{{student.firstName}} {{student.lastName}}</span>
+                  <span class="day-since" ng-if="student.lastExcerptDate.length != 0">{{student.lastExcerptDate}}</span>
+                  <span class="day-since"   ng-if="!student.pastExcerpt">-</span>
+                </li>
+              </ul>
+            </section>
+            <div class="tag-editor">
+              <p class="tag-editor-title">Tags skills</p>
+              <ul class="tag-select" ng-model="excerpt.skills">
+                <li ng-repeat="item in excerpt.skills">
+                  <span class="tag-label" ng-click="toggleTag(item)" ng-class="{'active': item.checked}">
+                    {{item.value}}
+                    <i ng-class="{'delete-tag' : !item.predefined}" ng-if="item.predefined == false" ng-click="deleteTag(excerpt.skills, $index)">
+                      <!--delete tag-->
+                    </i>
+                  </span>
+                </li>
+              </ul>
+              <input type="text" ng-model="leftColumn.newTag.value" placeholder="Add new skill..." ng-focus="disableFixed()"/>
+              <button class="ctrl-btn add-tag" ng-click="leftColumn.addTag(excerpt)" ng-disabled="!leftColumn.newTag.value">Add</button>
+            </div>
+            <button class="ctrl-btn cancel-excerpt" ng-click="leftColumn.cancelEdit(excerpt);" toggle-draggable="false" ng-disabled="!(excerpt.content)">Cancel</button>
+            <button class="ctrl-btn save-excerpt" ng-click="leftColumn.saveEdit(excerpt);" toggle-draggable="false">Post Excerpt</button>
+          </section>
+          <section class="excerpt-display-mode">
+            <header>
+              <span class="excerpt-student-name"  ng-if="excerpt.author != 'anonymous '">{{excerpt.author}}</span>
+              <span class="excerpt-student-name-anonymous"  ng-if="excerpt.author == 'anonymous '">anonymous</span>
+              <div class='excerpt-mode-icon-container'>
+                <!--drag icon-->
+                <a scroll-top class="edit-btn" ng-click="leftColumn.toggleEdit(excerpt, $event)" toggle-draggable="true">
+                  <!--edit icon-->
+                </a>
+              </div>
+              <div class="quote-triangle"></div>
+              <div class="quote-inner-triangle"></div>
+            </header>
+            <div class="excerpt-container">{{excerpt.content}}</div>
+            <div class="saved-excerpt-tag-wrapper"><span class="saved-excerpt-tag" ng-repeat="skill in excerpt.skills | filter:{checked:true}">{{skill.value}}</span></div>
+          </section>
+        </li>
+        <!-- End of saved excerpts Left-->
+      </ul>
+    </div>
+    <div class="saved-excerpts column-2">
+      <button class="add-new-box" ng-hide="rightColumn.showGhost" ng-click="rightColumn.showGhostBox()" ng-disabled="!editingAllowed">add to right column</button>
+      <section class="new-excerpt" ng-class="{'editing-disallowed': !editingAllowed, 'edit-mode': rightColumn.boxAttr}">
+        <section class="editbox" ng-show="rightColumn.showGhost">
+          <textarea toggle-draggable="true" ng-model="rightColumn.newExcerpt.content" ng-focus="rightColumn.showAttr('right'); disableFixed();" placeholder="Write or paste excerpt here.." ng-disabled="!rightColumn.boxAttr && !editingAllowed"></textarea>
+          <section class="student-attr" ng-show="rightColumn.boxAttr">
+            <button class="ctrl-btn select-student" ng-click="toggleStudentName()" ng-hide="showRoster">select student...</button>
+            <div class="student-name" >
+              <input ng-class="{selected:
+                attributedStudentId}" class="student-name-input"  ng-model="rightColumn.newExcerpt.author" ng-show="showRoster" placeholder="Add/select student" disabled="disabled" />
+              <div class="triangle" ng-show="showRoster"></div>
+              <div class="triangle inner-triangle" ng-show="showRoster"></div>
+            </div>
+            <section class="student-roster-container" ng-show="showRoster">
+              <button class="anonymous-author-btn" ng-click="selectedStudent('anonymous')">
+                <!--anonymous icon-->Make Anonymous
+              </button>
+              <header class="student-roster-header">
+                <span>days since last featured</span>
+              </header>
+              <ul class="student-roster">
+                <li ng-repeat="student in currentRoster" ng-class="{active:student.key === attributedStudentId}" ng-click="selectedStudent(student)">
+                  <span class="student-full-name">{{student.firstName}} {{student.lastName}}</span>
+                  <span class="day-since" ng-if="student.lastExcerptDate.length != 0">{{student.lastExcerptDate}}</span>
+                  <span class="day-since"   ng-if="!student.pastExcerpt">-</span>
+                </li>
+              </ul>
+            </section>
+            <div class="tag-editor">
+              <p class="tag-editor-title">Tags skills</p>
+              <ul class="tag-select" ng-model="rightColumn.newExcerpt.skills">
+                <li ng-repeat="item in rightColumn.newExcerpt.skills">
+                  <span class="tag-label" ng-click="toggleTag(item)" ng-class="{'active': item.checked}">
+                    {{item.value}}
+                    <i ng-class="{'delete-tag' : !item.predefined}" ng-if="item.predefined == false" ng-click="deleteTag(rightColumn.newExcerpt.skills, $index)">
+                      <!--delete tag icon-->
+                    </i>
+                  </span>
+                </li>
+              </ul>
+              <input type="text" ng-model="rightColumn.newTag.value" placeholder="Add new skill..." ng-focus="disableFixed()"/>
+              <button class="ctrl-btn add-tag" ng-click="rightColumn.addTag(rightColumn.newExcerpt)" ng-disabled="!rightColumn.newTag.value">Add</button>
+            </div>
+            <button class="ctrl-btn cancel-excerpt" ng-click="rightColumn.discardNewExcerpt(rightColumn.newExcerpt);" toggle-draggable="false">Cancel</button>
+            <button  class="ctrl-btn save-excerpt" ng-click="rightColumn.saveExcerpt(rightColumn.newExcerpt);" ng-disabled="!(rightColumn.newExcerpt.author && rightColumn.newExcerpt.content)" toggle-draggable="false">Post Excerpt</button>
+          </section>
+        </section>
+      </section>
+      <ul class="saved-excerpts-list" html-sortable="sortable_cross_option" ng-model="rightColumn.excerpts" ng-extra-sortable="rightColumn.side" flag="onDrag">
+        <li class="droppable ng-scope empty-list-holder" ng-if="onDrag && rightColumn.excerpts.length  == 0 && leftColumn.excerpts.length != 1">Drag and Drop Here</li>
+        <!-- Needed for empty list -->
+        <li class="excerpt" ng-repeat="excerpt in rightColumn.excerpts" draggable="{{!editingAllowed}}" ng-class="{'edit-mode':excerpt.editMode, 'editing-disallowed': !editingAllowed}">
+          <section class="excerpt-edit-mode">
+            <div class='excerpt-mode-icon-container'>
+              <i class="remove-button" ng-click="rightColumn.delete(excerpt)" toggle-draggable="false">
+                <!--remove icon-->
+              </i>
+            </div>
+            <textarea ng-model="excerpt.content" ng-focus="disableFixed()"></textarea>
+            <button class="ctrl-btn select-student" ng-click="toggleStudentName()" ng-hide="showRoster">select student...</button>
+            <div class="student-name" >
+              <input ng-class="{selected: attributedStudentId}" class="student-name-input" ng-model="excerpt.author" ng-show="showRoster" placeholder="Add/select student" disabled="disabled" />
+              <div class="triangle" ng-show="showRoster"></div>
+              <div class="triangle inner-triangle" ng-show="showRoster"></div>
+            </div>
+            <section class="student-roster-container" ng-show="showRoster">
+              <button class="anonymous-author-btn" ng-click="selectedStudent('anonymous')">
+                <!--anonymous icon-->Make Anonymous
+              </button>
+              <header class="student-roster-header">
+                <span>days since last featured</span>
+              </header>
+              <ul class="student-roster">
+                <li ng-repeat="student in currentRoster" ng-class="{active:student.key === attributedStudentId}" ng-click="selectedStudent(student)">
+                  <span class="student-full-name">{{student.firstName}} {{student.lastName}}</span>
+                  <span class="day-since" ng-if="student.lastExcerptDate.length != 0">{{student.lastExcerptDate}}</span>
+                  <span class="day-since"   ng-if="!student.pastExcerpt">-</span>
+                </li>
+              </ul>
+            </section>
+            <div class="tag-editor">
+              <p class="tag-editor-title">Tags skills</p>
+              <ul class="tag-select">
+                <li ng-repeat="item in excerpt.skills">
+                  <span class="tag-label" ng-click="toggleTag(item)" ng-class="{'active': item.checked}">
+                    {{item.value}}
+                    <i ng-class="{'delete-tag' : !item.predefined}" ng-if="item.predefined == false" ng-click="deleteTag(excerpt.skills, $index)">
+                      <!--delete tag icon-->
+                    </i>
+                  </span>
+                </li>
+              </ul>
+              <input type="text" ng-model="rightColumn.newTag.value" placeholder="Add new skill..." ng-focus="disableFixed()"/>
+              <button class="ctrl-btn add-tag" ng-click="rightColumn.addTag(excerpt)" ng-disabled="!rightColumn.newTag.value">Add</button>
+            </div>
+            <button class="ctrl-btn cancel-excerpt" ng-click="rightColumn.cancelEdit(excerpt);" toggle-draggable="false">Cancel</button>
+            <button class="ctrl-btn save-excerpt" ng-click="rightColumn.saveEdit(excerpt);" toggle-draggable="false" ng-disabled="!(excerpt.content)">Save Excerpt</button>
+          </section>
+          <section class="excerpt-display-mode">
+            <header>
+              <span class="excerpt-student-name"  ng-if="excerpt.author != 'anonymous '">{{excerpt.author}}</span>
+              <span class="excerpt-student-name-anonymous"  ng-if="excerpt.author == 'anonymous '">anonymous</span>
+              <div class='excerpt-mode-icon-container'>
+                <!--drag handle icon-->
+                <a scroll-top class="edit-btn" ng-click="rightColumn.toggleEdit(excerpt, $event)" toggle-draggable="true">
+                  <!--edit btn icon-->
+                </a>
+              </div>
+              <div class="quote-triangle"></div>
+              <div class="quote-inner-triangle"></div>
+            </header>
+            <div class="excerpt-container">{{excerpt.content}}</div>
+            <div class="saved-excerpt-tag-wrapper"><span class="saved-excerpt-tag" ng-repeat="skill in excerpt.skills | filter:{checked:true}">{{skill.value}}</span></div>
+          </section>
+        </li>
+        <!-- End of saved excerpts Left-->
+      </ul>
+    </div>
+  </section>
+</div>
